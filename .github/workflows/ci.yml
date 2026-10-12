@@ -10,3 +10,5 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: docker build -t apprentice-exercise .
+      - run: docker run -d -p 80:3000 apprentice-exercise
+      - uses: liatrio/github-actions/apprentice-action@master
