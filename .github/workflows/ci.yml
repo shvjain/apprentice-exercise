@@ -23,7 +23,7 @@ jobs:
           min=$(echo "$raw" | jq -c .)
           [ -n "$raw" ]
           [ "$raw" = "$min" ]
-      - - name: Log in to Docker Hub
+      - name: Log in to Docker Hub
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
