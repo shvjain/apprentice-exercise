@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,3 +23,15 @@ jobs:
           min=$(echo "$raw" | jq -c .)
           [ -n "$raw" ]
           [ "$raw" = "$min" ]
+      - - name: Log in to Docker Hub
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - name: Tag and push versioned image
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          TAG="${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}-${GITHUB_SHA::7}"
+          docker tag apprentice-exercise "$DOCKERHUB_USERNAME/apprentice-exercise:$TAG"
+          docker push "$DOCKERHUB_USERNAME/apprentice-exercise:$TAG"
