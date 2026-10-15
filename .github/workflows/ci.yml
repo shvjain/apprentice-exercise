@@ -12,3 +12,10 @@ jobs:
       - run: docker build -t apprentice-exercise .
       - run: docker run -d -p 80:3000 apprentice-exercise
       - uses: liatrio/github-actions/apprentice-action@0b41561cca6822cc8d880fe0e49e7807a41fdf91
+      - name: Check response is minified JSON
+        run: |
+          raw=$(curl -sf http://localhost:80/)
+          echo "$raw"
+          min=$(echo "$raw" | jq -c .)
+          [ -n "$raw" ]
+          [ "$raw" = "$min" ]
